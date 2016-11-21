@@ -1,3 +1,7 @@
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import aed.examen.model.Conexion;
 
 public class Main {
@@ -17,7 +21,19 @@ public class Main {
 
 		con.conectar();
 
-	
+		try {
+			PreparedStatement query = con.getConexion().prepareStatement("select * from autores");
+			ResultSet res = query.executeQuery();
+			
+			System.out.println("Codigo  |Nombre");
+			while (res.next()) {
+				System.out.println(res.getString("codAutor")+"     |"+res.getString("nombreAutor"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

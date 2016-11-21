@@ -3,30 +3,30 @@ package aed.examen.view;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 public class MainView extends BorderPane {
-	private ToolBar toolBar;
-	private Button actualizarButton;
+	private VBox toolBar;
+	private Button conectarButton;
 	private TextField hostText, puertoText, dbText, userText;
 	private PasswordField passwordField;
 	private ComboBox<String> rutaBox;
 	private ArrayList<String> optionList;
 
 	public MainView() {
-		toolBar = new ToolBar();
 		optionList = new ArrayList<>();
 		optionList.add("jdbc:mysql:");
 		optionList.add("jdbc:ucanaccess:");
-		actualizarButton = new Button("Actualizar");
-		actualizarButton.setDefaultButton(true);
-		actualizarButton.setDisable(true);
+		conectarButton = new Button("Conectar");
+		conectarButton.setDefaultButton(true);
 		rutaBox = new ComboBox<>();
+		rutaBox.setMaxWidth(Double.MAX_VALUE);
 		rutaBox.setItems(FXCollections.observableArrayList(optionList));
 		rutaBox.getSelectionModel().select(0);
 		hostText = new TextField("localhost");
@@ -39,11 +39,12 @@ public class MainView extends BorderPane {
 		dbText.setPromptText("Base de datos...");
 		passwordField = new PasswordField();
 		passwordField.setPromptText("Contraseña...");
-		toolBar.getItems().addAll(rutaBox, hostText, puertoText, dbText, userText, passwordField, actualizarButton);
+		toolBar = new VBox(5, rutaBox, hostText, puertoText, dbText, userText, passwordField, conectarButton);
 		setTop(toolBar);
+		setPadding(new Insets(10));		
 	}
 
-	public ToolBar getToolBar() {
+	public VBox getToolBar() {
 		return toolBar;
 	}
 
@@ -51,8 +52,8 @@ public class MainView extends BorderPane {
 		return hostText;
 	}
 
-	public Button getActualizarButton() {
-		return actualizarButton;
+	public Button getConectarButton() {
+		return conectarButton;
 	}
 
 	public TextField getPuertoText() {

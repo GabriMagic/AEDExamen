@@ -1,34 +1,34 @@
 package aed.examen.controller;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import aed.examen.model.Conexion;
 import aed.examen.view.MainView;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class MainController {
 
 	private Conexion conexion;
 	private MainView view;
-	private Stage app;
+	// private Stage app;
 
 	public MainController(Stage primaryStage) {
 
 		view = new MainView();
 
-		app = primaryStage;
+		// app = primaryStage;
 		conexion = new Conexion();
 
-		view.getActualizarButton().setOnAction(e -> inicializarConexion(e));
+		view.getConectarButton().setOnAction(e -> inicializarConexion(e));
 
 	}
 
 	private void inicializarConexion(ActionEvent e2) {
 
-		view.getActualizarButton().setDisable(false);
+		view.getConectarButton().setDisable(false);
 
 		conexion.setRuta(view.getRutaBox().getValue());
 		conexion.setHost(view.getHostText().getText());
@@ -40,40 +40,21 @@ public class MainController {
 		conexion.conectar();
 
 		try {
+			PreparedStatement query = conexion.getConexion().prepareStatement("SELECT * FROM libros");
+			ResultSet res = query.executeQuery();
 
-			switch (conexion.isConnected()) {
-			case 1:
-				app.setTitle("Conectado a: MySQL");
-				break;
-			case 2:
-				app.setTitle("Conectado a: ACCESS");
-				break;
-			case 3:
-				app.setTitle("Conectado a: SQL Server");
-				break;
-			case 0:
-				Alert errorConnect = new Alert(AlertType.ERROR);
-				errorConnect.setHeaderText(null);
-				errorConnect.setContentText("Error al conectar con la base de datos: " + view.getDbText().getText());
-				errorConnect.show();
-				app.setTitle("-------");
-				break;
+			while (res.next()) {
+				System.out.println("Código libro: " + res.getInt("codLibro"));
+				System.out.println("Nombre libro: " + res.getString(2));
+				System.out.println("ISBN: " + res.getString(3));
+				System.out.println("Fecha Intro: " + res.getDate(4).toString());
+				System.out.println("--------------------");
 			}
 
-		} catch (NumberFormatException | NullPointerException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-			Alert errorFormat = new Alert(AlertType.ERROR);
-			errorFormat.setTitle("Conexión SQL");
-			errorFormat.setHeaderText("Error al conectar");
-			errorFormat.setContentText("Complete los campos correctamente.");
-			errorFormat.show();
-			app.setTitle("-------");
-			try {
-				conexion.getConexion().close();
-			} catch (SQLException err) {
-				System.out.println("HEREE");
-			}
 		}
+
 	}
 
 	public MainView getView() {
