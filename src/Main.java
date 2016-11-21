@@ -9,7 +9,7 @@ public class Main {
 		Conexion con = new Conexion();
 
 		con.setRuta("jdbc:mysql:");
-		con.setHost("localhost");
+		con.setHost("");
 		con.setDb("bdbiblioteca");
 		con.setPuerto(3306);
 		con.setUser("root");
@@ -17,6 +17,7 @@ public class Main {
 
 		con.conectar();
 
+	
 	}
 
 }
